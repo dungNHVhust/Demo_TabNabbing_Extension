@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "TabNabbing Extension",
+  "version": "1.0",
+  "description": "Malicious extension",
+  "action": {
+    "default_title": "Demo Extension !!!",
+    "default_icon": "images/icon48.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["scripting", "tabs","storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["inject.html","inject.js","fb.ico"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "icons": {
+    "48": "images/icon48.png"
+  }
+}
