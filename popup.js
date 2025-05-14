@@ -1,6 +1,31 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const domainList = document.getElementById("domainList");
 
+  // Default : Inject all
+  const defaultToggle = document.createElement("div");
+  defaultToggle.innerHTML = `
+    <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+      <span><strong>🚀 Inject All By Default</strong></span>
+      <label class="switch">
+        <input type="checkbox" id="defaultSwitch">
+        <span class="slider"></span>
+      </label>
+    </label>
+  `;
+  domainList.before(defaultToggle);
+
+  const defaultCheckbox = defaultToggle.querySelector("#defaultSwitch");
+
+  // Load default flag
+  chrome.storage.local.get("defaultInjectAll", (res) => {
+    defaultCheckbox.checked = res.defaultInjectAll || false;
+  });
+
+  // Save flag on toggle
+  defaultCheckbox.addEventListener("change", () => {
+    chrome.storage.local.set({ defaultInjectAll: defaultCheckbox.checked });
+  });
+
   const tabs = await chrome.tabs.query({ currentWindow: true });
   const domains = {};
 
@@ -39,8 +64,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     toggle.appendChild(input);
     toggle.appendChild(slider);
 
-    row.appendChild(label);      
-    row.appendChild(toggle);     
-    domainList.appendChild(row); 
+    row.appendChild(label);
+    row.appendChild(toggle);
+    domainList.appendChild(row);
   });
 });

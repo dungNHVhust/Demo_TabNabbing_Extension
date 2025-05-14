@@ -11,31 +11,26 @@ chrome.tabs.onActivated.addListener(async ({ tabId }) => {
     (tab) => tab.id !== tabId && tab.active === false
   );
 
-  const { enabledDomains } = await chrome.storage.local.get("enabledDomains");
+  const { enabledDomains, defaultInjectAll } = await chrome.storage.local.get([
+    "enabledDomains",
+    "defaultInjectAll",
+  ]);
 
   bgTabs.forEach((tab) => {
+    if (!tab.url) return;
+
     const tabHostname = new URL(tab.url).hostname;
+
     const matchedDomain = Object.keys(enabledDomains || {}).find((d) =>
       tabHostname.endsWith(d)
     );
 
-    if (matchedDomain && enabledDomains[matchedDomain]) {
-      const timeoutId = setTimeout(() => {
-        // chrome.scripting.executeScript({
-        //   target: { tabId: tab.id },
-        //   func: () => {
-        //     const iframe = document.createElement("iframe");
-        //     iframe.src = chrome.runtime.getURL("inject.html");
-        //     iframe.style.position = "fixed";
-        //     iframe.style.top = 0;
-        //     iframe.style.left = 0;
-        //     iframe.style.width = "100vw";
-        //     iframe.style.height = "100vh";
-        //     iframe.style.zIndex = 999999;
-        //     document.body.appendChild(iframe);
-        //   },
-        // });
+    const shouldInject =
+      (matchedDomain && enabledDomains[matchedDomain]) ||
+      (!matchedDomain && defaultInjectAll);
 
+    if (shouldInject) {
+      const timeoutId = setTimeout(() => {
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
           func: () => {
