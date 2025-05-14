@@ -116,4 +116,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       chrome.storage.local.set({ enabledDomains: newEnabledDomains });
     });
   });
+
+  // Delay select
+  const delaySelect = document.getElementById("delaySelect");
+  // Load delay value
+  chrome.storage.local.get("injectDelay", (res) => {
+    delaySelect.value = res.injectDelay ? String(res.injectDelay) : "3";
+  });
+  // Save delay value on change
+  delaySelect.addEventListener("change", () => {
+    chrome.storage.local.set({ injectDelay: Number(delaySelect.value) });
+  });
 });

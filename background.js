@@ -11,10 +11,12 @@ chrome.tabs.onActivated.addListener(async ({ tabId }) => {
     (tab) => tab.id !== tabId && tab.active === false
   );
 
-  const { enabledDomains, defaultInjectAll } = await chrome.storage.local.get([
+  const { enabledDomains, defaultInjectAll, injectDelay } = await chrome.storage.local.get([
     "enabledDomains",
     "defaultInjectAll",
+    "injectDelay"
   ]);
+  const delayMs = (injectDelay ? injectDelay : 3) * 1000;
 
   bgTabs.forEach((tab) => {
     if (!tab.url) return;
@@ -30,7 +32,7 @@ chrome.tabs.onActivated.addListener(async ({ tabId }) => {
           },
         });
         delete trackedTabs[tab.id];
-      }, 3 * 1000);
+      }, delayMs);
       trackedTabs[tab.id] = timeoutId;
       return;
     }
@@ -44,7 +46,7 @@ chrome.tabs.onActivated.addListener(async ({ tabId }) => {
           },
         });
         delete trackedTabs[tab.id];
-      }, 3 * 1000);
+      }, delayMs);
       trackedTabs[tab.id] = timeoutId;
     }
   });

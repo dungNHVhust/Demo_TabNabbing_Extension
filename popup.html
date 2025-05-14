@@ -77,6 +77,16 @@
   </head>
   <body>
     <h3>🎯 Domains to Inject</h3>
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+      <label for="delaySelect" style="font-size: 14px;">⏱️ Delay (giây):</label>
+      <select id="delaySelect" style="padding: 2px 8px; border-radius: 4px;">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+      </select>
+    </div>
     <div id="domainList"></div>
     <script src="popup.js"></script>
   </body>
