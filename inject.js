@@ -1,17 +1,11 @@
 // console.log("✅ Inject.js loaded");
-document.title = "Facebook - Đăng nhập hoặc đăng ký";
+// document.title = "Facebook - Đăng nhập hoặc đăng ký";
 
-function changeFavicon(url) {
-  let link = document.querySelector("link[rel~='icon']");
-  if (!link) {
-    link = document.createElement("link");
-    link.rel = "icon";
-    document.head.appendChild(link);
-  }
-  link.href = url;
-}
+// const link = document.createElement("link");
+// link.rel = "icon";
+// link.href = chrome.runtime.getURL("fb.ico");
+// document.head.appendChild(link);
 
-changeFavicon(chrome.runtime.getURL("images/fb.ico"));
 
 document.getElementById("loginForm").addEventListener("submit", function (e) {
   e.preventDefault();
