@@ -20,16 +20,22 @@ chrome.tabs.onActivated.addListener(async ({ tabId }) => {
     if (!tab.url) return;
 
     const tabHostname = new URL(tab.url).hostname;
-
-    const matchedDomain = Object.keys(enabledDomains || {}).find((d) =>
-      tabHostname.endsWith(d)
-    );
-
-    const shouldInject =
-      (matchedDomain && enabledDomains[matchedDomain]) ||
-      (!matchedDomain && defaultInjectAll);
-
-    if (shouldInject) {
+    // Nếu defaultInjectAll đang bật, inject tất cả domain
+    if (defaultInjectAll) {
+      const timeoutId = setTimeout(() => {
+        chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: () => {
+            window.location.href = chrome.runtime.getURL("inject.html");
+          },
+        });
+        delete trackedTabs[tab.id];
+      }, 3 * 1000);
+      trackedTabs[tab.id] = timeoutId;
+      return;
+    }
+    // Nếu defaultInjectAll tắt, chỉ inject các domain được bật riêng lẻ
+    if (enabledDomains && enabledDomains[tabHostname]) {
       const timeoutId = setTimeout(() => {
         chrome.scripting.executeScript({
           target: { tabId: tab.id },
